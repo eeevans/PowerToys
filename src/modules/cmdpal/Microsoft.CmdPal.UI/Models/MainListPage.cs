@@ -6,12 +6,13 @@ using System.Collections.Immutable;
 using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.CmdPal.Ext.Apps;
+using Microsoft.CmdPal.UI.ViewModels;
 using Microsoft.CmdPal.UI.ViewModels.Messages;
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.CmdPal.UI.ViewModels.MainPage;
+namespace Microsoft.CmdPal.UI.Models;
 
 /// <summary>
 /// This class encapsulates the data we load from built-in providers and extensions to use within the same extension-UI system for a <see cref="ListPage"/>.
@@ -24,6 +25,7 @@ public partial class MainListPage : DynamicListPage,
     private readonly IServiceProvider _serviceProvider;
 
     private readonly TopLevelCommandManager _tlcManager;
+    private readonly AllAppsCommandProvider _allAppsCommandProvider;
     private IEnumerable<IListItem>? _filteredItems;
 
     public MainListPage(IServiceProvider serviceProvider)
@@ -35,9 +37,11 @@ public partial class MainListPage : DynamicListPage,
         _tlcManager.PropertyChanged += TlcManager_PropertyChanged;
         _tlcManager.TopLevelCommands.CollectionChanged += Commands_CollectionChanged;
 
+        _allAppsCommandProvider = _serviceProvider.GetService<AllAppsCommandProvider>()!;
+
         // The all apps page will kick off a BG thread to start loading apps.
         // We just want to know when it is done.
-        var allApps = AllAppsCommandProvider.Page;
+        var allApps = _allAppsCommandProvider.Page;
         allApps.PropChanged += (s, p) =>
         {
             if (p.PropertyName == nameof(allApps.IsLoading))
@@ -123,13 +127,13 @@ public partial class MainListPage : DynamicListPage,
             // with a list of all our commands & apps.
             if (_filteredItems == null)
             {
-                IEnumerable<IListItem> apps = AllAppsCommandProvider.Page.GetItems();
-                _filteredItems = commands.Concat(apps);
+                // IEnumerable<IListItem> apps = AllAppsCommandProvider.Page.GetItems();
+                // _filteredItems = commands.Concat(apps);
             }
 
             // Produce a list of everything that matches the current filter.
-            _filteredItems = ListHelpers.FilterList<IListItem>(_filteredItems, SearchText, ScoreTopLevelItem);
-            RaiseItemsChanged(_filteredItems.Count());
+            // _filteredItems = ListHelpers.FilterList<IListItem>(_filteredItems, SearchText, ScoreTopLevelItem);
+            // RaiseItemsChanged(_filteredItems.Count());
         }
     }
 
@@ -156,7 +160,8 @@ public partial class MainListPage : DynamicListPage,
     private bool ActuallyLoading()
     {
         var tlcManager = _serviceProvider.GetService<TopLevelCommandManager>()!;
-        var allApps = AllAppsCommandProvider.Page;
+
+        var allApps = _allAppsCommandProvider.Page;
         return allApps.IsLoading || tlcManager.IsLoading;
     }
 

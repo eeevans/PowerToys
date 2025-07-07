@@ -20,6 +20,7 @@ using Microsoft.CmdPal.Ext.WindowsTerminal;
 using Microsoft.CmdPal.Ext.WindowWalker;
 using Microsoft.CmdPal.Ext.WinGet;
 using Microsoft.CmdPal.UI.Helpers;
+using Microsoft.CmdPal.UI.Models;
 using Microsoft.CmdPal.UI.ViewModels;
 using Microsoft.CmdPal.UI.ViewModels.BuiltinCommands;
 using Microsoft.CmdPal.UI.ViewModels.Models;
@@ -96,7 +97,8 @@ public partial class App : Application
 
         // Built-in Commands. Order matters - this is the order they'll be presented by default.
         var allApps = new AllAppsCommandProvider();
-        services.AddSingleton<ICommandProvider>(allApps);
+        services.AddSingleton(allApps);
+        services.AddSingleton<ICommandProvider>(sp => sp.GetService<AllAppsCommandProvider>()!);
         services.AddSingleton<ICommandProvider, ShellCommandsProvider>();
         services.AddSingleton<ICommandProvider, CalculatorCommandProvider>();
         services.AddSingleton<ICommandProvider, IndexerCommandsProvider>();

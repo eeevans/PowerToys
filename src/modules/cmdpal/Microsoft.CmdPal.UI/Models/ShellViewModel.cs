@@ -9,16 +9,16 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ManagedCommon;
 using Microsoft.CmdPal.Common.Services;
-using Microsoft.CmdPal.UI.ViewModels.MainPage;
+using Microsoft.CmdPal.UI.ViewModels;
 using Microsoft.CmdPal.UI.ViewModels.Messages;
 using Microsoft.CmdPal.UI.ViewModels.Models;
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using WinRT;
 
-namespace Microsoft.CmdPal.UI.ViewModels;
+namespace Microsoft.CmdPal.UI.Models;
 
-public partial class ShellViewModel(IServiceProvider _serviceProvider, TaskScheduler _scheduler) : ObservableObject
+public partial class ShellViewModel(IServiceProvider serviceProvider, TaskScheduler scheduler) : ObservableObject
 {
     [ObservableProperty]
     public partial bool IsLoaded { get; set; } = false;
@@ -29,7 +29,7 @@ public partial class ShellViewModel(IServiceProvider _serviceProvider, TaskSched
     [ObservableProperty]
     public partial bool IsDetailsVisible { get; set; }
 
-    private PageViewModel _currentPage = new LoadingPageViewModel(null, _scheduler);
+    private PageViewModel _currentPage = new LoadingPageViewModel(null, scheduler);
 
     public PageViewModel CurrentPage
     {
@@ -61,12 +61,12 @@ public partial class ShellViewModel(IServiceProvider _serviceProvider, TaskSched
     [RelayCommand]
     public async Task<bool> LoadAsync()
     {
-        var tlcManager = _serviceProvider.GetService<TopLevelCommandManager>();
+        var tlcManager = serviceProvider.GetService<TopLevelCommandManager>();
         await tlcManager!.LoadBuiltinsAsync();
         IsLoaded = true;
 
         // Built-ins have loaded. We can display our page at this point.
-        _mainListPage = new MainListPage(_serviceProvider);
+        _mainListPage = new MainListPage(serviceProvider);
         WeakReferenceMessenger.Default.Send<PerformCommandMessage>(new(new ExtensionObject<ICommand>(_mainListPage)));
 
         _ = Task.Run(async () =>
@@ -140,7 +140,7 @@ public partial class ShellViewModel(IServiceProvider _serviceProvider, TaskSched
                         },
                         CancellationToken.None,
                         TaskCreationOptions.None,
-                        _scheduler);
+                        scheduler);
                 }
             });
         }

@@ -2,6 +2,7 @@
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Linq;
 using Microsoft.CmdPal.Ext.Apps.Properties;
 using Microsoft.CommandPalette.Extensions;
@@ -11,12 +12,27 @@ namespace Microsoft.CmdPal.Ext.Apps;
 
 public partial class AllAppsCommandProvider : CommandProvider
 {
-    public static readonly AllAppsPage Page = new();
+    private readonly AllAppsPage _page;
+
+    public AllAppsPage Page
+    {
+        get
+        {
+            return _page;
+        }
+
+        set
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     private readonly CommandItem _listItem;
 
     public AllAppsCommandProvider()
     {
+        _page = new();
+
         Id = "AllApps";
         DisplayName = Resources.installed_apps;
         Icon = IconHelpers.FromRelativePath("Assets\\AllApps.svg");

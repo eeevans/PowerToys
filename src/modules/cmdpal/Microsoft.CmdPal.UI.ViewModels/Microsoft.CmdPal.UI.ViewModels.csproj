@@ -27,7 +27,7 @@
     <PackageReference Include="AdaptiveCards.ObjectModel.WinUI3" GeneratePathProperty="true">
       <ExcludeAssets>compile</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="AdaptiveCards.Rendering.WinUI3" GeneratePathProperty="True" >
+    <PackageReference Include="AdaptiveCards.Rendering.WinUI3" GeneratePathProperty="True">
       <ExcludeAssets>compile</ExcludeAssets>
     </PackageReference>
 
@@ -57,8 +57,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.CmdPal.Common\Microsoft.CmdPal.Common.csproj" />
     <ProjectReference Include="..\extensionsdk\Microsoft.CommandPalette.Extensions.Toolkit\Microsoft.CommandPalette.Extensions.Toolkit.csproj" />
-
-    <ProjectReference Include="..\ext\Microsoft.CmdPal.Ext.Apps\Microsoft.CmdPal.Ext.Apps.csproj" />
 
     <ProjectReference Include="..\..\..\common\ManagedCommon\ManagedCommon.csproj" />
 

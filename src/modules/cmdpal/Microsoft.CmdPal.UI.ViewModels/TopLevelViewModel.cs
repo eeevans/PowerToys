@@ -245,7 +245,7 @@ public sealed partial class TopLevelViewModel : ObservableObject, IListItem
         }
     }
 
-    internal bool SafeUpdateFallbackTextSynchronous(string newQuery)
+    public bool SafeUpdateFallbackTextSynchronous(string newQuery)
     {
         if (!IsFallback)
         {
